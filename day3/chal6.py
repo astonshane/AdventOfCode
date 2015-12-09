@@ -1,7 +1,7 @@
 f = open("chal5_input.txt")
 # set initial positions
-santa = (0,0)
-robo = (0,0)
+santa = (0, 0)
+robo = (0, 0)
 
 visited = set()
 # add initial positon to visited set
@@ -12,7 +12,7 @@ turn = 0
 
 for line in f:
     for c in line.strip():
-        pos = (0,0)
+        pos = (0, 0)
         # determine who's turn it is this time
         if turn:
             print "robot:",
