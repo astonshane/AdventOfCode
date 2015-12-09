@@ -2,11 +2,12 @@
 def pairRepeating(word):
     for i in range(0, len(word)-1):
         pair = word[i] + word[i+1]
-        remaining = word[:i]+ "#" + word[i+2:]
+        remaining = word[:i] + "#" + word[i+2:]
         if pair in remaining:
             print "###", pair, remaining
             return True
     return False
+
 
 def repeatedSkip1(word):
     for i in range(0, len(word)-2):
