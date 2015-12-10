@@ -1,5 +1,6 @@
 import copy
 
+
 def toInt(cmd):
     cmd[0] = int(cmd[0])
     cmd[1] = int(cmd[1])
@@ -29,7 +30,6 @@ f = open("chal11_input.txt")
 
 for line in f:
     cmd = line.strip().split(' ')
-    #print cmd
     if cmd[0] == "toggle":
         start = toInt(cmd[1].split(","))
         end = toInt(cmd[3].split(","))
@@ -43,7 +43,6 @@ for line in f:
             for i in range(start[0], end[0]+1):
                 for j in range(start[1], end[1]+1):
                     grid[j][i] += 1
-
 
         elif cmd[1] == "off":
             for i in range(start[0], end[0]+1):
