@@ -1,10 +1,12 @@
 import sys
 
+
 def splitPassword(password):
     p = []
     for c in password:
         p.append(c)
     return p
+
 
 def combinePassword(password):
     p = ""
@@ -12,17 +14,19 @@ def combinePassword(password):
         p += c
     return p
 
+
 def increment(password):
     password = splitPassword(password)
     i = len(password)-1
     while True:
         if password[i] != 'z':
             password[i] = chr(ord(password[i])+1)
-            break;
+            break
         else:
             password[i] = 'a'
             i -= 1
     return combinePassword(password)
+
 
 def threeStraight(password):
     for i in range(0, len(password) - 2):
@@ -31,8 +35,10 @@ def threeStraight(password):
             return True
     return False
 
+
 def noForbidden(password):
     return 'i' not in password and 'o' not in password and 'l' not in password
+
 
 def twoPairs(password):
     foundOne = False
@@ -41,10 +47,11 @@ def twoPairs(password):
             if foundOne:
                 return True
             else:
-                password[i] = '|';
-                password[i+1] = '|';
+                password[i] = '|'
+                password[i+1] = '|'
                 foundOne = True
     return False
+
 
 def validPassword(password):
     password = splitPassword(password)
@@ -58,7 +65,7 @@ if len(sys.argv) != 2:
 
 password = sys.argv[1]
 print "original:   ", password
-password = increment(password) # we have to increment at least once
+password = increment(password)  # we have to increment at least once
 while True:
     print password
     if validPassword(password):
