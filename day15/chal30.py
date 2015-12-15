@@ -11,7 +11,6 @@ max_teaspoons = int(sys.argv[2])
 
 permutations = []
 
-
 def assignValues(assignments, remainingKeys, assigned):
     toAssign = remainingKeys[0]
     remainingKeys.remove(toAssign)
@@ -24,9 +23,16 @@ def assignValues(assignments, remainingKeys, assigned):
             newAssignments[toAssign] = i
             assignValues(newAssignments, copy.copy(remainingKeys), assigned+i)
 
-
 def score(assignment, catagories):
     score = 1
+    calories = 0
+    print assignment,
+    for ingredient in assignment:
+        calories += ingredients[ingredient]['calories']*assignment[ingredient]
+    print calories
+    if calories != 500:
+        return None
+
     for cat in catagories:
         cat_score = 0
         for ingredient in assignment:
@@ -35,6 +41,7 @@ def score(assignment, catagories):
             score *= 0
         else:
             score *= cat_score
+
     return score
 
 
@@ -60,7 +67,7 @@ catagories.remove('calories')
 
 for p in permutations:
     s = score(p, catagories)
-    if max_score is None or s > max_score:
+    if s is not None and (max_score is None or s > max_score):
         max_score = s
 
 print "max_score:", max_score
