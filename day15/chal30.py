@@ -11,6 +11,7 @@ max_teaspoons = int(sys.argv[2])
 
 permutations = []
 
+
 def assignValues(assignments, remainingKeys, assigned):
     toAssign = remainingKeys[0]
     remainingKeys.remove(toAssign)
@@ -22,6 +23,7 @@ def assignValues(assignments, remainingKeys, assigned):
             newAssignments = copy.copy(assignments)
             newAssignments[toAssign] = i
             assignValues(newAssignments, copy.copy(remainingKeys), assigned+i)
+
 
 def score(assignment, catagories):
     score = 1
