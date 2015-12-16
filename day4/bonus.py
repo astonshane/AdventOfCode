@@ -1,12 +1,12 @@
 import md5
 import sys
+from time import gmtime, strftime
 
 # ######################
 if len(sys.argv) != 2:
     print "need a check length"
     exit(1)
 length = int(sys.argv[1])
-print '0'*length
 
 secret = "ckczppom"
 out = "coins.txt"
@@ -23,8 +23,10 @@ while(1):
     m1.update(str(i))
     hsh = m1.hexdigest()
     if hsh[:length] == "0"*length:
-        print i, hsh
+        t = strftime("%H:%M:%S", gmtime())
+        o = "%d %s %s\n" % (i, hsh, t)
+        print i, hsh,
         f = open(out, 'a')
-        f.write("%d %s\n" % (i, hsh))
+        f.write(o)
         f.close()
     i += 1
