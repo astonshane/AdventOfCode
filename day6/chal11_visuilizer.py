@@ -1,8 +1,8 @@
 import copy
 import os
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+from PIL import Image, ImageDraw, ImageFont
+
+
 def toInt(cmd):
     cmd[0] = int(cmd[0])
     cmd[1] = int(cmd[1])
@@ -17,6 +17,7 @@ def countOn(grid):
                 count = count + 1
     return count
 
+
 def generateImage(grid, id):
     size = (len(grid), len(grid))
     img = Image.new('RGB', size, 'black')
@@ -24,7 +25,7 @@ def generateImage(grid, id):
     for i in range(0, len(grid)):
         for j in range(0, len(grid[i])):
             if grid[i][j]:
-                pixels[i,j] = (i, j, 100)
+                pixels[i, j] = (i, j, 100)
     draw = ImageDraw.Draw(img)
     draw.text((5, 5), str(id), fill=(255, 255, 0))
     id = str(id)
@@ -65,8 +66,6 @@ for line in f:
             for i in range(start[0], end[0]+1):
                 for j in range(start[1], end[1]+1):
                     grid[j][i] = True
-
-
         elif cmd[1] == "off":
             print "turning off...", start, end
             for i in range(start[0], end[0]+1):
@@ -78,4 +77,4 @@ for line in f:
 
 print countOn(grid)
 os.system("convert -loop 0 -delay 25 tmp/*.png animation.gif")
-# os.system("rm tmp/*.png")
+os.system("rm tmp/*.png")
