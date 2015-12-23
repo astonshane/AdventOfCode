@@ -25,19 +25,40 @@ int main(string[] args)
 
 		Coord santa;
 		santa.x = santa.y = 0;
+		Coord robo;
+		robo.x = robo.y = 0;
 		CoordSet coords = new CoordSet;
 		coords.insert(santa);
+
+		bool turn = true;
+
 		for (int i=0; i<line.length; i++){
-			if (line[i] == '>'){
-				santa.x += 1;
-			}else if (line[i] == '<'){
-				santa.x -= 1;
-			}else if (line[i] == '^'){
-				santa.y += 1;
-			}else if (line[i] == 'v'){
-				santa.y -= 1;
+			if (turn){
+				if (line[i] == '>'){
+					santa.x += 1;
+				}else if (line[i] == '<'){
+					santa.x -= 1;
+				}else if (line[i] == '^'){
+					santa.y += 1;
+				}else if (line[i] == 'v'){
+					santa.y -= 1;
+				}
+				coords.insert(santa);
+				turn = false;
+			}else{
+				if (line[i] == '>'){
+					robo.x += 1;
+				}else if (line[i] == '<'){
+					robo.x -= 1;
+				}else if (line[i] == '^'){
+					robo.y += 1;
+				}else if (line[i] == 'v'){
+					robo.y -= 1;
+				}
+				coords.insert(robo);
+				turn = true;
 			}
-			coords.insert(santa);
+
 		}
 		writefln("%s: %d", line, coords.length);
    }
