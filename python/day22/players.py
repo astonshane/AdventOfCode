@@ -7,7 +7,7 @@ class Player:
         self.active_spells = []
 
     def __str__(self):
-        return "- Player has %d hit points, %d armor, %d mana)" % (self.hp, self.armor, self.mana)
+        return "- Player has %d hit points, %d mana, %d cost)" % (self.hp, self.mana, self.cost)
 
     def __repr__(self):
         return self.__str__()
