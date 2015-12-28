@@ -14,8 +14,12 @@ int count(JSONValue j){
 		}
 		return value;
 	}else if (j.type == JSON_TYPE.OBJECT) {
+
 		int value = 0;
 		foreach (item; j.object){
+			if (item.type == JSON_TYPE.STRING && item.str == "red"){
+				return 0;
+			}
 			value += count(item);
 		}
 		return value;
