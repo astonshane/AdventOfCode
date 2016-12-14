@@ -1,5 +1,9 @@
 import Queue
 from sets import Set
+from time import sleep
+from colorama import init, Fore, Back
+
+init(autoreset=True)
 
 favorite_number = 1364
 goal = (31, 39)
@@ -45,7 +49,28 @@ def openWall(x, y):
     #print x, y, resp
     return resp
 
-def part1():
+def part1(viz=False):
+    if viz:
+        print '\033[2J' # clear the screen
+
+        # start by drawing the maze out
+        for i in range(0, 60):
+            for j in range(0, 100):
+                cursor_pos = '\033[%d;%dH' % (5+i, 20+j)
+                color = ''
+                kind = ''
+                if (j, i) == goal:
+                    color = Back.YELLOW
+                    kind = '0'
+                else:
+                    kind = openWall(j, i)
+                    color = ''
+                    if kind == '#':
+                        color = Fore.RED # red
+                    else:
+                        color = Fore.BLUE # blue
+                print cursor_pos+color+kind
+
     pQueue = Queue.PriorityQueue()
     seen = Set()
 
@@ -56,9 +81,12 @@ def part1():
     while not pQueue.empty():
         current = pQueue.get()[1]
         if current.isGoal():
-            print "found goal:", current
             print "(part1):", current.steps
             break
+        if viz:
+            cursor_pos = '\033[%d;%dH' % (5+current.y, 20+current.x)
+            sleep(0.03) # slow it down so we can see it!
+            print cursor_pos + '0'
 
         for i in [-1, 1]:
             x1, y1 = current.x+i, current.y
@@ -76,8 +104,26 @@ def part1():
                     n2 = Node(x2, y2, current.steps+1)
                     seen.add(n2.pos)
                     pQueue.put((n2.pos, n2))
+    if viz:
+        raw_input("enter to continue")
+        print '\033[2J' # clear the screen
 
-def part2():
+def part2(viz=False):
+    if viz:
+        print '\033[2J' # clear the screen
+
+        # start by drawing the maze out
+        for i in range(0, 60):
+            for j in range(0, 100):
+                cursor_pos = '\033[%d;%dH' % (5+i, 20+j)
+                kind = openWall(j, i)
+                color = ''
+                if kind == '#':
+                    color = Fore.RED # red
+                else:
+                    color = Fore.BLUE # blue
+                print cursor_pos+color+kind
+
     pQueue = Queue.PriorityQueue()
     seen = Set()
 
@@ -87,6 +133,10 @@ def part2():
 
     while not pQueue.empty():
         current = pQueue.get()[1]
+        if viz:
+            cursor_pos = '\033[%d;%dH' % (5+current.y, 20+current.x)
+            sleep(0.03) # slow it down so we can see it!
+            print cursor_pos + '0'
         if current.steps == 50:
             continue
 
@@ -109,14 +159,10 @@ def part2():
 
     print "(part2):", len(seen)
 
-for i in range(0, 50):
-    to_print = "%d " % i
-    for j in range(0, 50):
-        if (j, i) == goal:
-            to_print += 'O'
-        else:
-            to_print += openWall(j, i)
-    print to_print
+    if viz:
+        raw_input("enter to exit")
+        print '\033[2J' # clear the screen
 
-part1()
-part2()
+
+part1(viz=True)
+part2(viz=True)
