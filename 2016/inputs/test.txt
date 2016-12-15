@@ -1,6 +1,2 @@
-cpy 41 a
-inc a
-inc a
-dec a
-jnz a 2
-dec a
+Disc #1 has 5 positions; at time=0, it is at position 4.
+Disc #2 has 2 positions; at time=0, it is at position 1.
