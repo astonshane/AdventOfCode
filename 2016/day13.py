@@ -54,8 +54,8 @@ def part1(viz=False):
         print '\033[2J' # clear the screen
 
         # start by drawing the maze out
-        for i in range(0, 60):
-            for j in range(0, 100):
+        for i in range(0, 50):
+            for j in range(0, 60):
                 cursor_pos = '\033[%d;%dH' % (5+i, 20+j)
                 color = ''
                 kind = ''
@@ -70,7 +70,7 @@ def part1(viz=False):
                     else:
                         color = Fore.BLUE # blue
                 print cursor_pos+color+kind
-
+    raw_input()
     pQueue = Queue.PriorityQueue()
     seen = Set()
 
@@ -113,8 +113,8 @@ def part2(viz=False):
         print '\033[2J' # clear the screen
 
         # start by drawing the maze out
-        for i in range(0, 60):
-            for j in range(0, 100):
+        for i in range(0, 50):
+            for j in range(0, 60):
                 cursor_pos = '\033[%d;%dH' % (5+i, 20+j)
                 kind = openWall(j, i)
                 color = ''
