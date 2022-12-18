@@ -1,8 +1,10 @@
 from register import register_solution
 
+
 def to_set(t):
-    [i,j] = [int(x) for x in t.split('-')]
+    [i, j] = [int(x) for x in t.split('-')]
     return set(range(i, j+1))
+
 
 @register_solution(2022, 4, 1)
 @register_solution(2022, 4, 2)

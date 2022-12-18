@@ -5,6 +5,7 @@ for i in range(0, 26):
     priorities[ord('a') + i] = 1 + i
     priorities[ord('A') + i] = 27 + i
 
+
 @register_solution(2022, 3, 1)
 def part1(filepath):
     with open(filepath) as f:
@@ -18,6 +19,7 @@ def part1(filepath):
             priority = priorities[ord(item)]
             total_priority += priority
         print("Answer:", total_priority)
+
 
 @register_solution(2022, 3, 2)
 def part2(filepath):

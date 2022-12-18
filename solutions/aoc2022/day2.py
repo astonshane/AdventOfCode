@@ -1,10 +1,12 @@
 from register import register_solution
 from enum import Enum
 
+
 class RPC(Enum):
-    ROCK=1
-    PAPER=2
-    SCISSORS=3
+    ROCK = 1
+    PAPER = 2
+    SCISSORS = 3
+
 
 def getRPC(letter):
     if letter in ["A", "X"]:
@@ -13,7 +15,8 @@ def getRPC(letter):
         return RPC.PAPER
     if letter in ["C", "Z"]:
         return RPC.SCISSORS
-    
+
+
 @register_solution(2022, 2, 1)
 def part1(filepath):
     def parse_line(line):
@@ -40,12 +43,13 @@ def part1(filepath):
             total_score += score(play, response)
         print("Answer:", total_score)
 
+
 @register_solution(2022, 2, 2)
 def part2(filepath):
     class RESULT(Enum):
-        WIN=6
-        LOSE=0
-        DRAW=3
+        WIN = 6
+        LOSE = 0
+        DRAW = 3
 
     def getResult(letter):
         if letter == "X":
