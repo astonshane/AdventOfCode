@@ -21,3 +21,5 @@ rust/*/target/*
 Cargo.lock
 
 .vscode/
+
+.aoc_session_token

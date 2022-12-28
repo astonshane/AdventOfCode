@@ -3,6 +3,7 @@ import os
 from string import Template
 from importlib import import_module
 from register import get_solver
+import requests
 
 
 def auto_import():
@@ -13,34 +14,77 @@ def auto_import():
             except:
                 pass
 
+# creates any missing directories
+def create_paths(paths):
+    for path in paths:
+        os.makedirs(path, exist_ok=True)
+
+
+# creates a blank solution file with the mimimal template setup (see template.txt)
+def create_solution_file(path):
+    if os.path.exists(path):
+        return
+    x = {
+        'year': year,
+        'day': day
+    }
+    with open('template.txt', 'r') as fin:
+        src = Template(fin.read())
+        result = src.substitute(x)
+        with open(path, "w") as fout:
+            fout.write(result)
+
+# creates a blank file in the inputs/test directory for development testing
+def create_test_input_file(path):
+    if os.path.exists(path):
+        return
+    open(path, 'w').close()
+
+
+# returns your session token
+#   Search order:
+#       1. AOC_SESSION_TOKEN env var
+#       2. .aoc_session_token file
+def get_session_token():
+    token = os.getenv("AOC_SESSION_TOKEN")
+    if token:
+        return token.strip()
+
+    token_path = '.aoc_session_token'
+    if os.path.exists(token_path):
+        with open(token_path) as f:
+            token = f.readline().strip()
+
+    return token
+
+# fetches your actual input from the AOC servers
+def fetch_input(path, year, day):
+    if os.path.exists(path):
+        return
+
+    url = f"https://adventofcode.com/{year}/day/{day}/input"
+    session_token = get_session_token()
+    if session_token is None:
+        print("No AOC Session Token found - puzzle input not fetched")
+        return
+    print(session_token)
+    response = requests.get(url, cookies={
+        "session": session_token
+    })
+    response.raise_for_status()
+    with open(path, 'w') as f:
+        f.write(response.text)
+
 
 def generate_template(year, day):
-    # create any missing directories
     solution_path = f"solutions/aoc{year}/"
     input_path = f"inputs/{year}/"
     test_path = f"{input_path}tests/"
-    for path in [solution_path, test_path]:
-        os.makedirs(path, exist_ok=True)
 
-    # create a base file to start a new solution in (only if it isn't already there...)
-    solution_file = f"{solution_path}day{day}.py"
-    if not os.path.exists(solution_file):
-        x = {
-            'year': year,
-            'day': day
-        }
-        with open('template.txt', 'r') as fin:
-            src = Template(fin.read())
-            result = src.substitute(x)
-            with open(solution_file, "w") as fout:
-                fout.write(result)
-
-    # create an empty file in the inputs/test folder for this day
-    test_input_file = f"{test_path}day{day}.txt"
-    if not os.path.exists(test_input_file):
-        open(test_input_file, 'w').close()
-
-    # TODO: pull your actual input from the AOC site and put that in place too
+    create_paths([solution_path, test_path])
+    create_solution_file(f"{solution_path}day{day}.py")
+    create_test_input_file(f"{test_path}day{day}.txt")
+    fetch_input(f"{input_path}day{day}.txt", year, day)
 
 parser = argparse.ArgumentParser(
     prog='AdventOfCode',
