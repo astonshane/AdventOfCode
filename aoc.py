@@ -99,7 +99,6 @@ parser.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
 parser.add_argument('-t', '--test', action='store_true')
 
 args = parser.parse_args()
-print(args)
 
 if args.command == 'run':
     auto_import()
