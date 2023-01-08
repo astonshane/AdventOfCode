@@ -1,5 +1,4 @@
-import sys
-
+from register import register_solution
 
 def splitPassword(password):
     p = []
@@ -58,19 +57,22 @@ def validPassword(password):
     return threeStraight(password) and noForbidden(password) and twoPairs(password)
 
 
-# ######################
-if len(sys.argv) != 2:
-    print "need a starting password"
-    exit(1)
-
-password = sys.argv[1]
-print "original:   ", password
-password = increment(password)  # we have to increment at least once
-while True:
-    print password
-    if validPassword(password):
-        break
-    else:
+def newPassword(password):
+    password = increment(password)
+    while not validPassword(password):
         password = increment(password)
+    return password
 
-print "new:        ", password
+
+@register_solution(2015, 11, 1)
+def part1(filename):
+    with open(filename) as f:
+        starting_password = f.readline().strip()
+        print(newPassword(starting_password))
+
+
+@register_solution(2015, 11, 2)
+def part2(filename):
+    with open(filename) as f:
+        starting_password = f.readline().strip()
+        print(newPassword(newPassword(starting_password)))
