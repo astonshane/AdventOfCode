@@ -21,7 +21,7 @@ def create_paths(paths):
 
 
 # creates a blank solution file with the mimimal template setup (see template.txt)
-def create_solution_file(path):
+def create_solution_file(path, year, day):
     if os.path.exists(path):
         return
     x = {
@@ -76,13 +76,13 @@ def fetch_input(path, year, day):
         f.write(response.text)
 
 
-def generate_template(year, day):
+def bootstrap(year, day):
     solution_path = f"solutions/aoc{year}/"
     input_path = f"inputs/{year}/"
     test_path = f"{input_path}tests/"
 
     create_paths([solution_path, test_path])
-    create_solution_file(f"{solution_path}day{day}.py")
+    create_solution_file(f"{solution_path}day{day}.py", year, day)
     create_test_input_file(f"{test_path}day{day}.txt")
     fetch_input(f"{input_path}day{day}.txt", year, day)
 
@@ -91,7 +91,7 @@ parser = argparse.ArgumentParser(
     description='Advent of code solver'
 )
 
-parser.add_argument('command', choices=['run', 'init'])
+parser.add_argument('command', choices=['run', 'bootstrap'])
 
 parser.add_argument('-y', '--year', required=True, type=int)
 parser.add_argument('-d', '--day', required=True, type=int)
@@ -111,4 +111,4 @@ if args.command == 'run':
         filepath = f"inputs/{args.year}{testpath}/day{args.day}.txt"
         f(filepath)
 else:
-    generate_template(args.year, args.day)
+    bootstrap(args.year, args.day)
