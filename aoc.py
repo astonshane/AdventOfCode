@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import argparse
 import os
 from string import Template
@@ -20,7 +22,7 @@ def create_paths(paths):
         os.makedirs(path, exist_ok=True)
 
 
-# creates a blank solution file with the mimimal template setup (see template.txt)
+# creates a blank solution file with the minimal template setup (see template.txt)
 def create_solution_file(path, year, day):
     if os.path.exists(path):
         return
@@ -33,6 +35,7 @@ def create_solution_file(path, year, day):
         result = src.substitute(x)
         with open(path, "w") as fout:
             fout.write(result)
+
 
 # creates a blank file in the inputs/test directory for development testing
 def create_test_input_file(path):
@@ -56,6 +59,7 @@ def get_session_token():
             token = f.readline().strip()
 
     return token
+
 
 # fetches your actual input from the AOC servers
 def fetch_input(path, year, day):
@@ -86,29 +90,54 @@ def bootstrap(year, day):
     create_test_input_file(f"{test_path}day{day}.txt")
     fetch_input(f"{input_path}day{day}.txt", year, day)
 
-parser = argparse.ArgumentParser(
-    prog='AdventOfCode',
-    description='Advent of code solver'
-)
 
-parser.add_argument('command', choices=['run', 'bootstrap'])
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog='aoc.py',
+        description="""
+        Helper code to help organize and manage your Advent of Code solutions.
+        
+        The bootstrap functionality that downloads your actual AOC input dataset for you requires your session token.
+        
+        One way to find your session token value:
+        * In your browser of choice, log into Advent of Code
+        * Open the developer console and go to network tab
+        * Open one of the input file pages (while signed in)
+            * example: http://adventofcode.com/2022/day/1/input
+        * Inspect the headers, and take your session token from the cookie
+        
+        The token needs to be provided in one of the following ways:
+        1. AOC_SESSION_TOKEN environment variable
+        2. `.aoc_session_token` file in your present working directory
+        
+        """,
+        epilog='https://adventofcode.com/ https://github.com/astonshane/AdventOfCode',
+        formatter_class=argparse.RawTextHelpFormatter
+    )
 
-parser.add_argument('-y', '--year', required=True, type=int)
-parser.add_argument('-d', '--day', required=True, type=int)
-parser.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
-parser.add_argument('-t', '--test', action='store_true')
+    parser.add_argument('-y', '--year', required=True, type=int)
+    parser.add_argument('-d', '--day', required=True, type=int)
+    parser.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
+    parser.add_argument('-t', '--test', action='store_true', help='use the testing dataset instead of real dataset')
+    parser.add_argument('--bootstrap',
+                        action='store_true',
+                        help='sets up directories, '
+                             'creates bootstrapped solution file from the template, '
+                             'and downloads dataset (if not done previously)'
+                        )
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-if args.command == 'run':
+    if args.bootstrap:
+        bootstrap(args.year, args.day)
+
     auto_import()
 
     f = get_solver(args.year, args.day, args.part)
     if f is None:
         print("couldn't find a registered function for this year/day/part...")
     else:
-        testpath = "/tests" if args.test else ""
-        filepath = f"inputs/{args.year}{testpath}/day{args.day}.txt"
+        test_path = "/tests" if args.test else ""
+        filepath = f"inputs/{args.year}{test_path}/day{args.day}.txt"
         f(filepath)
-else:
-    bootstrap(args.year, args.day)
+
