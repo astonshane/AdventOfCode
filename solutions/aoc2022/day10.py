@@ -35,10 +35,6 @@ def part1(filename):
     print("Signal Strength:", signal_strength)
 
 
-
-
-
-
 @register_solution(2022, 10, 2)
 def part2(filename):
     commands = []
