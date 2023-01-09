@@ -1,3 +1,6 @@
+from register import register_solution
+
+
 def decompress(compressed, part2):
     retval = 0
     while '(' in compressed:
@@ -20,6 +23,13 @@ def decompress(compressed, part2):
     return retval
 
 
-compressed = open('inputs/day9.txt').read().strip()
-print "(part1):", decompress(compressed, False)
-print "(part2):", decompress(compressed, True)
+@register_solution(2016, 9, 1)
+def part1(filename):
+    compressed = open(filename).read().strip()
+    print(decompress(compressed, False))
+
+
+@register_solution(2016, 9, 2)
+def part2(filename):
+    compressed = open(filename).read().strip()
+    print(decompress(compressed, True))
