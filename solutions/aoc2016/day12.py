@@ -1,6 +1,8 @@
+from register import register_solution
 import re
 
-def run(registers):
+
+def run(registers, filename):
     cpyRegisterRegex = 'cpy ([a-z]) ([a-z])'
     cpyValueRegex = 'cpy (\d+) ([a-z])'
     incDecRegex = '(inc|dec) ([a-z])'
@@ -9,16 +11,16 @@ def run(registers):
 
     lines = []
 
-    f = open('inputs/day12.txt')
-    for line in f:
-        lines.append(line.strip())
+    with open(filename) as f:
+        for line in f:
+            lines.append(line.strip())
 
     i = 0
     while i < len(lines):
         line = lines[i]
 
         m = re.search(cpyValueRegex, line)
-        if m != None:
+        if m is not None:
             (value, register) = m.groups()
             registers[register] = int(value)
             i += 1
@@ -32,7 +34,7 @@ def run(registers):
             continue
 
         m2 = re.search(incDecRegex, line)
-        if m2 != None:
+        if m2 is not None:
             (kind, register) = m2.groups()
             mod = 0
             if kind == "inc":
@@ -44,7 +46,7 @@ def run(registers):
             continue
 
         m3 = re.search(jnzValueRegex, line)
-        if m3 != None:
+        if m3 is not None:
             (tester, jump) = m3.groups()
             if int(tester) != 0:
                 i += int(jump)
@@ -53,7 +55,7 @@ def run(registers):
             continue
 
         m4 = re.search(jnzRegisterRegex, line)
-        if m4 != None:
+        if m4 is not None:
             (tester, jump) = m4.groups()
             if registers[tester] != 0:
                 i += int(jump)
@@ -61,12 +63,18 @@ def run(registers):
                 i += 1
             continue
 
-        assert(False)
-
+        assert False
 
     return registers['a']
 
-registers = {'a':0, 'b':0, 'c':0, 'd':0}
-print "(part1):", run(registers)
-registers = {'a':0, 'b':0, 'c':1, 'd':0}
-print "(part2):", run(registers)
+
+@register_solution(2016, 12, 1)
+def part1(filename):
+    registers = {'a': 0, 'b': 0, 'c': 0, 'd': 0}
+    print("(part1):", run(registers, filename))
+
+
+@register_solution(2016, 12, 2)
+def part2(filename):
+    registers = {'a': 0, 'b': 0, 'c': 1, 'd': 0}
+    print("(part2):", run(registers, filename))
