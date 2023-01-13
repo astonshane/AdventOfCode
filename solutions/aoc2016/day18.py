@@ -1,9 +1,13 @@
+from register import register_solution
+
+
 def countSafe(row):
     count = 0
     for c in row:
         if c == '.':
             count += 1
     return count
+
 
 def run(previous_row, NUM_ROWS):
     rows = 1
@@ -29,8 +33,15 @@ def run(previous_row, NUM_ROWS):
 
     return safe_pos
 
-f = open("inputs/day18.txt")
-previous_row = f.read().strip()
 
-print "(part1):", run(previous_row, 40)
-print "(part2):", run(previous_row, 400000)
+@register_solution(2016, 18, 1)
+def part1(filename):
+    with open(filename) as f:
+        previous_row = f.read().strip()
+        print(run(previous_row, 40))
+
+@register_solution(2016, 18, 2)
+def part2(filename):
+    with open(filename) as f:
+        previous_row = f.read().strip()
+        print(run(previous_row, 400000))
