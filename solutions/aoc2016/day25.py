@@ -1,5 +1,7 @@
+from register import register_solution
 import re
 import copy
+
 
 def run(tape, registers):
     i = 0
@@ -9,7 +11,7 @@ def run(tape, registers):
         if outCount > 100:
             return True
         instruction = tape[i]
-        #print i, instruction, registers
+        # print i, instruction, registers
 
         m = re.search('cpy ([a-z]|[0-9]+) ([a-z])', instruction)
         if m is not None:
@@ -32,7 +34,7 @@ def run(tape, registers):
                 registers[register] -= 1
             i += 1
             continue
-        
+
         m = re.search('jnz ([a-z]|[0-9+]) (\-[0-9]+|[0-9]+)', instruction)
         if m is not None:
             (test, jmp) = m.groups()
@@ -57,7 +59,6 @@ def run(tape, registers):
                 value = int(value)
             else:
                 value = tmp
-            print value,
             outCount += 1
 
             if (last + value) == 1:
@@ -68,29 +69,31 @@ def run(tape, registers):
             i += 1
             continue
 
-        print "Unrecognized instruction: %s" % instruction
-        assert(False)
+        print("Unrecognized instruction: %s" % instruction)
+        assert False
     return False
 
-with open("inputs/day25.txt") as f:
-    tape = []
-    for line in f:
-        tape.append(line.strip())
-    
-    a = 0
-    while True:
-        registers = {
-            "a": a,
-            "b": 0,
-            "c": 0,
-            "d": 0
-        }
 
-        print "a == %d" % a,
-        ok = run(copy.copy(tape), registers)
-        print ""
-        if ok:
-            print "success at a == %d" % a
-            break
+@register_solution(2016, 25, 1)
+@register_solution(2016, 25, 2)
+def part1(filename):
+    with open(filename) as f:
+        tape = []
+        for line in f:
+            tape.append(line.strip())
 
-        a += 1
+        a = 0
+        while True:
+            registers = {
+                "a": a,
+                "b": 0,
+                "c": 0,
+                "d": 0
+            }
+
+            ok = run(copy.copy(tape), registers)
+            if ok:
+                print("success at a == %d" % a)
+                break
+
+            a += 1
