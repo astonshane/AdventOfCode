@@ -1,4 +1,6 @@
+from register import register_solution
 import re
+
 
 swap_position = 'swap position (\d) with position (\d)'
 swap_letter = 'swap letter ([a-z]) with letter ([a-z])'
@@ -109,9 +111,9 @@ unscrambled = movePos(scrambled, 0, 1, True)
 assert(test_pwd == unscrambled)
 
 
-def run(pwd, part2):
+def run(filename, pwd, part2):
     steps = []
-    with open('inputs/day21.txt') as file:
+    with open(filename) as file:
         for line in file:
             steps.append(line.strip())
 
@@ -152,5 +154,12 @@ def run(pwd, part2):
             continue
     return ''.join(pwd)
 
-print "(part1):", run(list("abcdefgh"), False)
-print "(part2):", run(list("fbgdceah"), True)
+
+@register_solution(2016, 21, 1)
+def part1(filename):
+    print(run(filename, list("abcdefgh"), False))
+
+
+@register_solution(2016, 21, 2)
+def part2(filename):
+    print(run(filename, list("fbgdceah"), True))
