@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 from string import Template
 from importlib import import_module
 from register import get_solver
@@ -15,6 +16,7 @@ def auto_import():
                 import_module(f"solutions.aoc{year}.day{day}")
             except:
                 pass
+
 
 # creates any missing directories
 def create_paths(paths):
@@ -91,53 +93,52 @@ def bootstrap(year, day):
     fetch_input(f"{input_path}day{day}.txt", year, day)
 
 
+class AdventOfCode:
+    def __init__(self):
+        parser = argparse.ArgumentParser(
+            description="Helper code to help organize and manage your Advent of Code solutions."
+        )
+        parser.add_argument('command', help='Subcommand to run', choices=['run', 'stats'])
+        args = parser.parse_args(sys.argv[1:2])
+        getattr(self, args.command)()
+
+    def run(self):
+        parser = argparse.ArgumentParser(
+            description='Run the solution for the specified year/day/part'
+        )
+        parser.add_argument('-y', '--year', required=True, type=int)
+        parser.add_argument('-d', '--day', required=True, type=int)
+        parser.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
+        parser.add_argument('-t', '--test', action='store_true', help='use the testing dataset instead of real dataset')
+        parser.add_argument('--bootstrap',
+                            action='store_true',
+                            help='sets up directories, '
+                                 'creates bootstrapped solution file from the template, '
+                                 'and downloads dataset (if not done previously)'
+                            )
+        args = parser.parse_args(sys.argv[2:])
+
+        if args.bootstrap:
+            bootstrap(args.year, args.day)
+        auto_import()
+
+        f = get_solver(args.year, args.day, args.part)
+        if f is None:
+            print("couldn't find a registered function for this year/day/part...")
+        else:
+            test_path = "/tests" if args.test else ""
+            filepath = f"inputs/{args.year}{test_path}/day{args.day}.txt"
+            f(filepath)
+
+    def stats(self):
+        parser = argparse.ArgumentParser(
+            description='Show stats only for this year'
+        )
+        parser.add_argument('-y', '--year', type=int)
+        args = parser.parse_args(sys.argv[2:])
+        # unimplemented
+        pass
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        prog='aoc.py',
-        description="""
-        Helper code to help organize and manage your Advent of Code solutions.
-        
-        The bootstrap functionality that downloads your actual AOC input dataset for you requires your session token.
-        
-        One way to find your session token value:
-        * In your browser of choice, log into Advent of Code
-        * Open the developer console and go to network tab
-        * Open one of the input file pages (while signed in)
-            * example: http://adventofcode.com/2022/day/1/input
-        * Inspect the headers, and take your session token from the cookie
-        
-        The token needs to be provided in one of the following ways:
-        1. AOC_SESSION_TOKEN environment variable
-        2. `.aoc_session_token` file in your present working directory
-        
-        """,
-        epilog='https://adventofcode.com/ https://github.com/astonshane/AdventOfCode',
-        formatter_class=argparse.RawTextHelpFormatter
-    )
-
-    parser.add_argument('-y', '--year', required=True, type=int)
-    parser.add_argument('-d', '--day', required=True, type=int)
-    parser.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
-    parser.add_argument('-t', '--test', action='store_true', help='use the testing dataset instead of real dataset')
-    parser.add_argument('--bootstrap',
-                        action='store_true',
-                        help='sets up directories, '
-                             'creates bootstrapped solution file from the template, '
-                             'and downloads dataset (if not done previously)'
-                        )
-
-    args = parser.parse_args()
-
-    if args.bootstrap:
-        bootstrap(args.year, args.day)
-
-    auto_import()
-
-    f = get_solver(args.year, args.day, args.part)
-    if f is None:
-        print("couldn't find a registered function for this year/day/part...")
-    else:
-        test_path = "/tests" if args.test else ""
-        filepath = f"inputs/{args.year}{test_path}/day{args.day}.txt"
-        f(filepath)
-
+    AdventOfCode()
