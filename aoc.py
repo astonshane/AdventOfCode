@@ -96,28 +96,38 @@ def bootstrap(year, day):
 class AdventOfCode:
     def __init__(self):
         parser = argparse.ArgumentParser(
-            description="Helper code to help organize and manage your Advent of Code solutions."
+            description="Helper code to help organize and manage your Advent of Code solutions"
         )
-        parser.add_argument('command', help='Subcommand to run', choices=['run', 'stats'])
-        args = parser.parse_args(sys.argv[1:2])
-        getattr(self, args.command)()
+        # parent_parser.add_argument("-p", type=int, required=True,
+        #                            help="set db parameter")
+        subparsers = parser.add_subparsers(help='Desired action to perform', dest='command')
 
-    def run(self):
-        parser = argparse.ArgumentParser(
-            description='Run the solution for the specified year/day/part'
-        )
-        parser.add_argument('-y', '--year', required=True, type=int)
-        parser.add_argument('-d', '--day', required=True, type=int)
-        parser.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
-        parser.add_argument('-t', '--test', action='store_true', help='use the testing dataset instead of real dataset')
-        parser.add_argument('--bootstrap',
-                            action='store_true',
-                            help='sets up directories, '
-                                 'creates bootstrapped solution file from the template, '
-                                 'and downloads dataset (if not done previously)'
-                            )
-        args = parser.parse_args(sys.argv[2:])
+        parent_parser = argparse.ArgumentParser(add_help=False)
 
+        parser_run = subparsers.add_parser("run", parents=[parent_parser],
+                                           description="Run the solution for the specified year/day/part",
+                                           help="Run the solution for the specified year/day/part")
+        parser_run.add_argument('-y', '--year', required=True, type=int)
+        parser_run.add_argument('-d', '--day', required=True, type=int)
+        parser_run.add_argument('-p', '--part', default=1, choices=[1, 2], type=int)
+        parser_run.add_argument('-t', '--test', action='store_true',
+                                help='use the testing dataset instead of real dataset')
+        parser_run.add_argument('--bootstrap',
+                                action='store_true',
+                                help='sets up directories, '
+                                     'creates bootstrapped solution file from the template, '
+                                     'and downloads dataset (if not done previously)'
+                                )
+        parser_stats = subparsers.add_parser("stats", parents=[parent_parser],
+                                             description="Show stats",
+                                             help="show stats jfjfj")
+        parser_stats.add_argument('-y', '--year', type=int)
+
+        args = parser.parse_args()
+
+        getattr(self, args.command)(args)
+
+    def run(self, args):
         if args.bootstrap:
             bootstrap(args.year, args.day)
         auto_import()
@@ -130,14 +140,8 @@ class AdventOfCode:
             filepath = f"inputs/{args.year}{test_path}/day{args.day}.txt"
             f(filepath)
 
-    def stats(self):
-        parser = argparse.ArgumentParser(
-            description='Show stats only for this year'
-        )
-        parser.add_argument('-y', '--year', type=int)
-        args = parser.parse_args(sys.argv[2:])
-        # unimplemented
-        pass
+    def stats(self, args):
+        print("Stats Unimplemented!")
 
 
 if __name__ == "__main__":
