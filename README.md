@@ -20,7 +20,7 @@ Helper code to help organize and manage your Advent of Code solutions
 positional arguments:
   {run,stats}  Desired action to perform
     run        Run the solution for the specified year/day/part
-    stats      show stats jfjfj
+    stats      show completion stats
 
 optional arguments:
   -h, --help   show this help message and exit
