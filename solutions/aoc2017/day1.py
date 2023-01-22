@@ -1,3 +1,5 @@
+from register import register_solution
+
 def captcha(s, offset=1):
     sum = 0
     for i in range(0, len(s)):
@@ -19,8 +21,18 @@ assert captcha("123425", 3) == 4
 assert captcha("123123", 3) == 12
 assert captcha("12131415", 4) == 4
 
-with open("inputs/day1.txt") as f:
-    for line in f:
-        line = line.strip()
-        print("part1:", captcha(line))
-        print("part2:", captcha(line, int(len(line)/2)))
+
+@register_solution(2017, 1, 1)
+def part1(filename):
+    with open(filename) as f:
+        for line in f:
+            line = line.strip()
+            print("part1:", captcha(line))
+
+
+@register_solution(2017, 1, 2)
+def part2(filename):
+    with open(filename) as f:
+        for line in f:
+            line = line.strip()
+            print("part2:", captcha(line, int(len(line) / 2)))
