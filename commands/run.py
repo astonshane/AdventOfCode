@@ -5,7 +5,7 @@ from register import get_solver
 import requests
 
 def auto_import():
-    for year in range(2015, 2023):
+    for year in range(2015, 2030):
         for day in range(1, 26):
             try:
                 import_module(f"solutions.aoc{year}.day{day}")
