@@ -11,6 +11,8 @@ Would eventually like to add:
 
 ## Usage
 
+Virtual environment (venv): `source venv/bin/activate`
+
 ```
 ./aoc.py -h
 usage: aoc.py [-h] {run,stats} ...

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.11
+#!python3
 
 import argparse
 from commands.run import Run
