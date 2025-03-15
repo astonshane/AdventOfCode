@@ -7,7 +7,7 @@ def part1(filename):
     count = 0
     with open(filename) as f:
         for line in f:
-            m = re.search('(\d+)\s+(\d+)\s+(\d+)', line.strip())
+            m = re.search(r'(\d+)\s+(\d+)\s+(\d+)', line.strip())
             nums = [int(m.groups()[i]) for i in range(0, 3)]
             nums.sort()
             if nums[0] + nums[1] > nums[2]:
@@ -25,7 +25,7 @@ def part2(filename):
     with open(filename) as f:
         for line in f:
             line_count += 1
-            m = re.search('(\d+)\s+(\d+)\s+(\d+)', line.strip())
+            m = re.search(r'(\d+)\s+(\d+)\s+(\d+)', line.strip())
             nums = [int(m.groups()[i]) for i in range(0, 3)]
             lines.append(nums)
 
