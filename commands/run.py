@@ -2,7 +2,7 @@ import os
 from string import Template
 from importlib import import_module
 from register import get_solver
-import requests
+from commands.site_helpers import fetch_input
 
 def auto_import():
     for year in range(2015, 2030):
@@ -41,42 +41,6 @@ def create_test_input_file(path):
     open(path, 'w').close()
 
 
-# returns your session token
-#   Search order:
-#       1. AOC_SESSION_TOKEN env var
-#       2. .aoc_session_token file
-def get_session_token():
-    token = os.getenv("AOC_SESSION_TOKEN")
-    if token:
-        return token.strip()
-
-    token_path = '.aoc_session_token'
-    if os.path.exists(token_path):
-        with open(token_path) as f:
-            token = f.readline().strip()
-
-    return token
-
-
-# fetches your actual input from the AOC servers
-def fetch_input(path, year, day):
-    if os.path.exists(path):
-        return
-
-    url = f"https://adventofcode.com/{year}/day/{day}/input"
-    session_token = get_session_token()
-    if session_token is None:
-        print("No AOC Session Token found - puzzle input not fetched")
-        return
-    print(session_token)
-    response = requests.get(url, cookies={
-        "session": session_token
-    })
-    response.raise_for_status()
-    with open(path, 'w') as f:
-        f.write(response.text)
-
-
 def bootstrap(year, day):
     solution_path = f"solutions/aoc{year}/"
     input_path = f"inputs/{year}/"
@@ -85,7 +49,13 @@ def bootstrap(year, day):
     create_paths([solution_path, test_path])
     create_solution_file(f"{solution_path}day{day}.py", year, day)
     create_test_input_file(f"{test_path}day{day}.txt")
-    fetch_input(f"{input_path}day{day}.txt", year, day)
+
+    path = f"{input_path}day{day}.txt"
+    response = fetch_input(year, day)
+    if not os.path.exists(path) and response is not None:
+        print("Downloading input file...")
+        with open(path, 'w') as f:
+            f.write(response)
 
 class Run:
     def __init__(self):

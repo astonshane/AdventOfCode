@@ -1,5 +1,6 @@
 import os
 import re
+from commands.site_helpers import fetch_events_page
 
 class Stats:
     def __init__(self):
@@ -9,26 +10,27 @@ class Stats:
         parser_stats = subparsers.add_parser("stats", parents=[parent_parser],
                                              description="Show stats",
                                              help="show completion stats")
-        parser_stats.add_argument('-y', '--year', type=int)
-
-    def collect_files(self, year):
-        matcher = re.compile('\.\/solutions\/aoc(\d{4})\/day\d+\.py')
-        matching_files = {}
-        for root, dirs, files in os.walk("./solutions", topdown=False):
-            for name in files:
-                file = os.path.join(root, name)
-                m = matcher.match(file)
-                if m is not None:
-                    y = m.group(1)
-                    if year is not None and int(y) != year:
-                        continue
-                    if y not in matching_files:
-                        matching_files[y] = []
-                    matching_files[y].append(file)
-        return matching_files
-
 
     def execute(self, args):
-        matching_files = self.collect_files(args.year)
-        for year in sorted(matching_files.keys()):
-            print("Number of stars earned in year %s: %d" % (year, len(matching_files[year])))
+        total_stars = 0
+        stars_by_year = {}
+
+        response = fetch_events_page()
+        if response is None:
+            print("Error fetching stats!")
+            return
+        for line in response.splitlines():
+            if "star-count" not in line:
+                continue
+
+            if "eventlist-event" in line:
+                result = result = re.search(r"\[(\d+)\].+<span class=\"star-count\">\W*(\d+)\*</span>", line)
+                stars_by_year[int(result.group(1))] = int(result.group(2))
+
+            if "Total stars" in line:
+                result = re.search(r"<span class=\"star-count\">\W*(\d+)\*</span>", line)
+                total_stars = int(result.group(1))
+                continue
+        print(f"Total Stars: {total_stars}")
+        for year in sorted(stars_by_year.keys()):
+            print(f"  {year}: {stars_by_year[year]} stars")

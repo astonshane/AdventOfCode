@@ -43,13 +43,12 @@ optional arguments:
 ```
 ```
 ./aoc.py stats -h
-usage: aoc.py stats [-h] [-y YEAR]
+usage: aoc.py stats [-h]
 
 Show stats
 
 optional arguments:
   -h, --help            show this help message and exit
-  -y YEAR, --year YEAR
 ```
 ### Solution Bootstrapping
 The bootstrap functionality that downloads your actual AOC input dataset for you requires your session token.
