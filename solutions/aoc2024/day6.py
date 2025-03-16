@@ -110,7 +110,7 @@ def part1(filename):
 
     print(guard)
 
-def hasLoop(board, guard):
+def hasLoop(board, guard, override_x, override_y):
     while True:
         nextCoords = guard.nextCoords()
         if nextCoords is None:
@@ -121,7 +121,7 @@ def hasLoop(board, guard):
             #print("Next Step Out of bounds!")
             break
         # check if next coords are blocked
-        if board[next_y][next_x] == '#':
+        if board[next_y][next_x] == '#' or (next_x, next_y) == (override_x, override_y):
             #printBoard(board, guard)
             guard.turn()
             continue
@@ -150,9 +150,7 @@ def part2(filename):
             for x in range(0, len(board[0])):
                 if x == guard.x and y == guard.y:
                     continue
-                board_copy = deepcopy(board)
-                board_copy[y][x] = '#'
-                result = p.apply_async(hasLoop, [board_copy, Guard(guard.x, guard.y)])
+                result = p.apply_async(hasLoop, [board, Guard(guard.x, guard.y), x, y])
                 #print(result)
                 results.append(result)
 
