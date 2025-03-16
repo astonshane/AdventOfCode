@@ -1,6 +1,7 @@
 from register import register_solution
 from enum import Enum
 from copy import deepcopy
+from multiprocessing import Pool
 
 class Direction(Enum):
     NORTH = 0
@@ -38,7 +39,7 @@ class Guard:
             next_y = self.y
 
         if (next_x, next_y, self.direction.value) in self.visited_with_direction:
-            print("Loop detected!")
+            #print("Loop detected!")
             return None
 
         return (next_x, next_y)
@@ -113,7 +114,7 @@ def hasLoop(board, guard):
     while True:
         nextCoords = guard.nextCoords()
         if nextCoords is None:
-            return True
+            return 1
         (next_x, next_y) = nextCoords
         # check if next coords are valid
         if next_y < 0 or next_y >= len(board) or next_x < 0 or next_x >= len(board[0]):
@@ -125,7 +126,7 @@ def hasLoop(board, guard):
             guard.turn()
             continue
         guard.move(next_x, next_y)
-    return False
+    return 0
 
 @register_solution(2024, 6, 2)
 def part2(filename):
@@ -140,16 +141,19 @@ def part2(filename):
             break
 
     print(guard)
+    if guard is None:
+        return
 
-    loopCount = 0
-    for y in range(0, len(board)):
-        for x in range(0, len(board[0])):
-            if x == guard.x and y == guard.y:
-                continue
-            board_copy = deepcopy(board)
-            #printBoard(board_copy, guard)
-            board_copy[y][x] = '#'
-            #print(f"trying obsticle at ({x}, {y})")
-            loopCount += 1 if hasLoop(board_copy, Guard(guard.x, guard.y)) else 0
+    with Pool(10) as p:
+        results = []
+        for y in range(0, len(board)):
+            for x in range(0, len(board[0])):
+                if x == guard.x and y == guard.y:
+                    continue
+                board_copy = deepcopy(board)
+                board_copy[y][x] = '#'
+                result = p.apply_async(hasLoop, [board_copy, Guard(guard.x, guard.y)])
+                #print(result)
+                results.append(result)
 
-    print(loopCount)
+        print(sum([result.get() for result in results]))
